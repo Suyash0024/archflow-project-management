@@ -1,7 +1,6 @@
-// archflow-backend/src/middlewares/authMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User'; // Import User model and interface
+import User, { IUser } from '../models/User'; 
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,7 +9,7 @@ dotenv.config();
 declare global {
     namespace Express {
         interface Request {
-            user?: IUser; // Optional user property
+            user?: IUser; 
         }
     }
 }
@@ -29,7 +28,6 @@ const protect = async (req: Request, res: Response, next: NextFunction): Promise
             // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
 
-            // Attach user to the request object (without the password)
             req.user = await User.findById(decoded.id).select('-password');
             next();
         } catch (error: any) {

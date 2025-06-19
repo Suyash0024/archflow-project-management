@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// archflow-project-management/client/src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loginUser } from '../services/authService';
@@ -7,68 +6,142 @@ import { loginUser } from '../services/authService';
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string>('');
+    const [emailError, setEmailError] = useState<string>(''); 
+    const [passwordError, setPasswordError] = useState<string>(''); 
+    const [formError, setFormError] = useState<string>(''); 
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
+    const validateEmail = (email: string) => {
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            return false;
+        }
+        setEmailError('');
+        return true;
+    };
+
+    const validatePassword = (password: string) => {
+        if (password.length < 6) { // Example: minimum 6 characters
+            setPasswordError('Password must be at least 6 characters long.');
+            return false;
+        }
+        setPasswordError('');
+        return true;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
+        setFormError('');
+        
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+
+        if (!isEmailValid || !isPasswordValid) {
+            return; 
+        }
+
         setLoading(true);
 
         try {
             const data = await loginUser(email, password);
             if (data.token) {
                 localStorage.setItem('token', data.token);
-                alert('Login successful! Redirecting to dashboard.');
                 navigate('/dashboard');
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Login error:', err);
-            setError(err.response?.data?.message || 'Invalid credentials');
+            if (typeof err === 'object' && err !== null && 'response' in err && typeof (err as any).response === 'object') {
+                setFormError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Invalid credentials. Please try again.');
+            } else {
+                setFormError('Invalid credentials. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-lg shadow-xl border border-gray-200">
-            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Login to ArchFlow</h2>
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+        <div className="min-h-screen flex ml-100  items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full p-8 space-y-8 bg-white rounded-lg shadow-2xl border border-gray-200 mx-auto">
+                <h2 className="text-4xl font-extrabold text-center text-gray-900">Login to ArchFlow</h2>
+                {formError && <p className="text-red-500 text-center text-sm mb-4">{formError}</p>}
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="rounded-md shadow-sm -space-y-px">
+                        <div className="mb-4">
+                            <label htmlFor="email" className="sr-only">Email address</label> {/* sr-only for accessibility, visually hidden */}
+                            <input
+                                type="email"
+                                id="email"
+                                name="email" 
+                                autoComplete="email" 
+                                className={`
+                                    relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 
+                                    text-gray-900 rounded-md focus:outline-none focus:ring-green-500 
+                                    focus:border-green-500 focus:z-10 sm:text-sm
+                                    ${emailError ? 'border-red-500' : ''}
+                                `}
+                                placeholder="Email address" 
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    validateEmail(e.target.value);
+                                }}
+                                required
+                            />
+                            {emailError && <p className="text-red-500 text-xs italic mt-1">{emailError}</p>}
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="password" className="sr-only">Password</label> {/* sr-only for accessibility, visually hidden */}
+                            <input
+                                type="password"
+                                id="password"
+                                name="password" 
+                                autoComplete="current-password"
+                                className={`
+                                    relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 
+                                    text-gray-900 rounded-md focus:outline-none focus:ring-green-500 
+                                    focus:border-green-500 focus:z-10 sm:text-sm
+                                    ${passwordError ? 'border-red-500' : ''}
+                                `}
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    validatePassword(e.target.value);
+                                }}
+                                required
+                            />
+                            {passwordError && <p className="text-red-500 text-xs italic mt-1">{passwordError}</p>}
+                            <div className="text-right text-sm mt-2">
+                                <Link to="/forgot-password" className="font-medium text-green-600 hover:text-green-500">
+                                    Forgot your password?
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button
+                            type="submit"
+                            className={`
+                                group relative w-full flex justify-center py-2 px-4 border border-transparent 
+                                text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 
+                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500
+                                transition duration-200 ease-in-out transform 
+                                ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}
+                            `}
+                            disabled={loading || !!emailError || !!passwordError}
+                        >
+                            {loading ? 'Logging In...' : 'Login'}
+                        </button>
+                    </div>
+                </form>
+                <div className="text-center text-sm text-gray-600">
+                    Don't have an account? {' '}
+                    <Link to="/signup" className="font-medium text-green-600 hover:text-green-500">
+                        Sign Up here
+                    </Link>
                 </div>
-                <div className="mb-6">
-                    <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className={`w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    disabled={loading}
-                >
-                    {loading ? 'Logging In...' : 'Login'}
-                </button>
-            </form>
-            <p className="text-center text-gray-600 text-sm mt-6">
-                Don't have an account? <Link to="/signup" className="text-blue-600 hover:text-blue-800 font-semibold">Sign Up here</Link>
-            </p>
+            </div>
         </div>
     );
 };

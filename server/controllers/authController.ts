@@ -1,9 +1,8 @@
-// archflow-backend/src/controllers/authController.ts
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User'; // Import IUser for type checking
+import User, { IUser } from '../models/User';
 import dotenv from 'dotenv';
-import { ObjectId } from 'mongoose'; // Import ObjectId for explicit typing if needed
+import { ObjectId } from 'mongoose'; 
 
 dotenv.config();
 
@@ -17,14 +16,12 @@ const generateToken = (id: string): string => {
     });
 };
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
+
+//  POST /api/auth/register
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     const { username, email, password } = req.body;
 
     try {
-        // Check if user already exists
         const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
         if (userExists) {
@@ -56,9 +53,8 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-// @desc    Authenticate user & get token
 // @route   POST /api/auth/login
-// @access  Public
+
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
@@ -71,8 +67,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
-                // Fix for user._id: Ensure it's treated as an ObjectId or string
-                token: generateToken(user._id.toString()), // Convert ObjectId to string
+                token: generateToken(user._id.toString()), 
             });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
@@ -83,9 +78,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-// @desc    Get user profile (example of a protected route)
 // @route   GET /api/auth/profile
-// @access  Private
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
     // req.user is populated by the protect middleware
     // We already have `declare global` in authMiddleware.ts
@@ -98,9 +91,7 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
             email: req.user.email,
         });
     } else {
-        // This case should theoretically not be hit if the `protect` middleware works correctly
-        // and always attaches `req.user` or sends a 401.
-        // However, it's good practice for type safety.
+        
         res.status(404).json({ message: 'User not found' });
     }
 };

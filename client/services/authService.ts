@@ -1,8 +1,7 @@
-// archflow-frontend/src/services/authService.ts
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:5000/api', // Your backend API base URL
+    baseURL: 'http://localhost:5000/api',
 });
 
 // Request interceptor to add JWT token to headers
@@ -47,6 +46,5 @@ export const getUserProfile = async (): Promise<UserProfile> => {
 // Helper function to handle logout
 export const logout = (): void => {
     localStorage.removeItem('token');
-    // You might want to clear user info if stored separately
-    // localStorage.removeItem('userInfo');
+    
 };

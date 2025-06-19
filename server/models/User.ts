@@ -1,8 +1,6 @@
-// archflow-backend/src/models/User.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-// 1. Define an interface for your User document
 export interface IUser extends Document {
     username: string;
     email: string;
@@ -11,7 +9,6 @@ export interface IUser extends Document {
     matchPassword(enteredPassword: string): Promise<boolean>; // Add method to interface
 }
 
-// 2. Define the Mongoose Schema
 const UserSchema: Schema<IUser> = new Schema({
     username: {
         type: String,
@@ -33,7 +30,7 @@ const UserSchema: Schema<IUser> = new Schema({
     },
 });
 
-// 3. Pre-save hook to hash password
+//  hook to hash password
 UserSchema.pre<IUser>('save', async function(next) {
     if (!this.isModified('password')) {
         next();
@@ -43,12 +40,10 @@ UserSchema.pre<IUser>('save', async function(next) {
     next();
 });
 
-// 4. Method to compare password (attached to the schema)
 UserSchema.methods.matchPassword = async function(enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// 5. Export the Mongoose Model
 const User = mongoose.model<IUser>('User', UserSchema);
 
 export default User;
