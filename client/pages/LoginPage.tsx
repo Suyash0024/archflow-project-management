@@ -65,9 +65,9 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex ml-100  items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex   items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full p-8 space-y-8 bg-white rounded-lg shadow-2xl border border-gray-200 mx-auto">
-                <h2 className="text-4xl font-extrabold text-center text-gray-900">Login to ArchFlow</h2>
+                <h2 className="text-4xl font-extrabold text-center font-semibold text-gray-900">Login to ArchFlow</h2>
                 {formError && <p className="text-red-500 text-center text-sm mb-4">{formError}</p>}
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm -space-y-px">
