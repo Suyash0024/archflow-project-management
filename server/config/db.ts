@@ -1,9 +1,7 @@
-// archflow-backend/src/config/db.ts
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables
-
+dotenv.config(); 
 const connectDB = async (): Promise<void> => {
     try {
         if (!process.env.MONGO_URI) {
@@ -13,7 +11,7 @@ const connectDB = async (): Promise<void> => {
         console.log('MongoDB Connected...');
     } catch (err: any) {
         console.error(`Error: ${err.message}`);
-        process.exit(1); // Exit process with failure
+        process.exit(1); 
     }
 };
 

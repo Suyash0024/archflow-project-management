@@ -25,7 +25,10 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white shadow-md p-4 flex items-center justify-between z-10">
-      <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+      <div className="flex items-center space-x-4">
+        <span className="text-2xl font-semibold text-dark">Arch Flow</span>
+      <span className="text-xl text-gray-700 ml-8">Proplet Name</span> {/* Adjust margin-left (ml-8) as needed */}
+      </div>
 
       <div className="flex items-center space-x-4">
         {/* Notification Icon */}

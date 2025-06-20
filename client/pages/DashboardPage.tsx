@@ -1,22 +1,16 @@
-// client/pages/DashboardPage.tsx
+
 import React from 'react';
-import Header from '../components/Header'; // Adjust import path
-import Sidebar from '../components/Sidebar'; // Adjust import path
-import MainContent from '../components/MainContent'; // Adjust import path
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import MainContent from '../components/MainContent';
 
 const DashboardPage: React.FC = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main content area */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Header */}
-        <Header />
-
-        {/* Page content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4">
+    <div className="flex flex-col h-screen bg-gray-100">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-200">
           <MainContent />
         </main>
       </div>

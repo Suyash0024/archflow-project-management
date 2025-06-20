@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -40,7 +41,7 @@ const SignupPage: React.FC = () => {
 
     return (
       <div className="max-w-md justify-center items-center mx-auto mt-12 p-6 pr-20 bg-white rounded-lg shadow-xl border border-gray-200">
-        <h2 className="text-3xl ml-5 font-bold text-center ml-6 mb-6 text-gray-800">
+        <h2 className="text-3xl font-bold text-center ml-6 mb-6 text-gray-800">
           Sign Up for ArchFlow
         </h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
