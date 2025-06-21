@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -21,7 +23,9 @@
 .text-dark {
   color: var(--color-black);
 }
-
+.primary-btn{
+  background-color: #1E88E5;
+}
 
 html, body, #root {
   height: 100%;
